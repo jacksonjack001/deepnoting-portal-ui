@@ -6,7 +6,41 @@
 
 AI Proxy Portal 是一个基于 FastAPI 的 LiteLLM 用户门户。它不替代 LiteLLM，而是在 LiteLLM 之上提供账号、虚拟 API Key、套餐、支付、用量分析、浏览器聊天、调用文档和 Agent 任务上报等产品能力。
 
-本目录是脱敏后的开源版本，已移除生产环境密钥、SQLite 数据库、内部域名/IP、支付凭据、邮件凭据、二维码图片和内部运维资料。
+本目录是脱敏后的开源版本，已移除生产环境密钥、SQLite 数据库、内部服务域名/IP、支付凭据、邮件凭据、二维码图片和内部运维资料。
+
+## 官网
+
+在线门户：[https://deepnoting.cn/portal/](https://deepnoting.cn/portal/)
+
+## 界面预览
+
+### 登录与产品入口
+
+![登录与产品入口](ui/1-login.png)
+
+### 用量工作台
+
+![用量工作台](ui/2-usage.png)
+
+### 浏览器聊天
+
+![浏览器聊天](ui/3-chat.png)
+
+### 资源状态与自定义套餐
+
+![资源状态与自定义套餐](ui/4-price-model-1.png)
+
+### 预设套餐与退款流程
+
+![预设套餐与退款流程](ui/4-price-model-2.png)
+
+### API 与 Agent 配置文档
+
+![API 与 Agent 配置文档](ui/5-docs.png)
+
+### 新闻更新
+
+![新闻更新](ui/6-news.png)
 
 ## 核心功能
 
@@ -76,6 +110,9 @@ deploy/
 
 pngs/
   README.md               可选公开图片资源目录说明
+
+ui/
+  *.png                   README 使用的脱敏界面截图
 ```
 
 ## 环境要求
@@ -340,7 +377,7 @@ portal/data/portal.db
 - SQLite 数据库。
 - Python 字节码缓存。
 - 内部部署说明。
-- 真实域名、服务 IP 和二维码图片。
+- 内部服务域名、服务 IP 和二维码图片。官网演示地址会保留。
 - 支付和邮件服务凭据。
 - 私有截图和生成文档归档。
 

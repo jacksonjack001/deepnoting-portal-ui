@@ -6,7 +6,41 @@ This is the default README for the open-source package.
 
 AI Proxy Portal is a FastAPI-based user portal for a LiteLLM proxy. It provides account registration, virtual API key management, usage analytics, package/payment workflows, in-browser chat, model documentation, and optional Anthropic-compatible budget proxying.
 
-This repository is a sanitized open-source package. It intentionally excludes production secrets, SQLite data, private docs, real service IPs/domains, payment credentials, email credentials, QR codes, and internal operations notes.
+This repository is a sanitized open-source package. It intentionally excludes production secrets, SQLite data, private docs, internal service IPs/domains, payment credentials, email credentials, QR codes, and internal operations notes.
+
+## Official Website
+
+Live portal: [https://deepnoting.cn/portal/](https://deepnoting.cn/portal/)
+
+## UI Preview
+
+### Login And Product Entry
+
+![Login and product entry](ui/1-login.png)
+
+### Usage Dashboard
+
+![Usage dashboard](ui/2-usage.png)
+
+### In-Browser Chat
+
+![In-browser chat](ui/3-chat.png)
+
+### Resource Status And Custom Plans
+
+![Resource status and custom plans](ui/4-price-model-1.png)
+
+### Preset Plans And Refund Workflow
+
+![Preset plans and refund workflow](ui/4-price-model-2.png)
+
+### API And Agent Configuration Docs
+
+![API and agent configuration docs](ui/5-docs.png)
+
+### News Updates
+
+![News updates](ui/6-news.png)
 
 ## Core Features
 
@@ -72,6 +106,9 @@ deploy/
 
 pngs/
   README.md               Optional public image assets mounted at /assets
+
+ui/
+  *.png                   Sanitized screenshots used by this README
 ```
 
 ## Requirements
@@ -332,7 +369,7 @@ Do not commit SQLite database files.
 - SQLite database files.
 - Python bytecode caches.
 - Internal deployment notes.
-- Real domains, service IPs and QR code assets.
+- Internal domains, service IPs and QR code assets. The public demo URL is kept intentionally.
 - Payment and email provider credentials.
 - Private screenshots and generated document archives.
 
