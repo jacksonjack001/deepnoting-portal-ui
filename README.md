@@ -1,5 +1,9 @@
 # AI Proxy Portal
 
+**English** | [简体中文](README.zh-CN.md)
+
+This is the default README for the open-source package.
+
 AI Proxy Portal is a FastAPI-based user portal for a LiteLLM proxy. It provides account registration, virtual API key management, usage analytics, package/payment workflows, in-browser chat, model documentation, and optional Anthropic-compatible budget proxying.
 
 This repository is a sanitized open-source package. It intentionally excludes production secrets, SQLite data, private docs, real service IPs/domains, payment credentials, email credentials, QR codes, and internal operations notes.
@@ -335,4 +339,3 @@ Do not commit SQLite database files.
 ## License
 
 No license is included in this sanitized export. Choose and add a license, such as MIT or Apache-2.0, before publishing the repository.
-

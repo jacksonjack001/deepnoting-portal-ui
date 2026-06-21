@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>调用文档 - AI Proxy Portal</title>
+    <link rel="stylesheet" href="static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="doc-page">
+    <main class="doc">
+      <a href="./#docs" class="back-link">返回门户</a>
+      <h1>API 调用文档</h1>
+      <p>支付完成后，使用注册时得到的 Key 调用 OpenAI 兼容接口。</p>
+
+      <h2>Base URL</h2>
+      <pre><code>https://llm.example.com</code></pre>
+
+      <h2>基础 Chat Completions</h2>
+      <pre><code>curl https://llm.example.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3-32b",
+    "messages": [
+      {"role": "system", "content": "你是一个简洁可靠的助手。"},
+      {"role": "user", "content": "你好，帮我写一个注册欢迎语。"}
+    ]
+  }'</code></pre>
+
+      <h2>Python SDK</h2>
+      <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_KEY",
+    base_url="https://llm.example.com"
+)
+
+response = client.chat.completions.create(
+    model="qwen3-32b",
+    messages=[{"role": "user", "content": "你好"}],
+    timeout=45,
+)
+print(response.choices[0].message.content)</code></pre>
+
+      <h2>JavaScript SDK</h2>
+      <pre><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.AI_PROXY_API_KEY,
+  baseURL: "https://llm.example.com",
+});
+
+const response = await client.chat.completions.create({
+  model: "qwen3-32b",
+  messages: [{ role: "user", content: "生成一个 5 条 TODO 列表" }],
+});
+
+console.log(response.choices[0].message.content);</code></pre>
+
+      <h2>流式输出</h2>
+      <pre><code>from openai import OpenAI
+
+client = OpenAI(api_key="YOUR_KEY", base_url="https://llm.example.com")
+
+stream = client.chat.completions.create(
+    model="qwen3-32b",
+    messages=[{"role": "user", "content": "分步骤解释 HTTP 缓存"}],
+    stream=True,
+)
+
+for chunk in stream:
+    delta = chunk.choices[0].delta.content
+    if delta:
+        print(delta, end="")</code></pre>
+
+      <h2>最佳实践</h2>
+      <div class="practice-grid">
+        <div><strong>Key 放服务端</strong><span>不要把 Key 放到网页、App 包或公开仓库中。</span></div>
+        <div><strong>记录 request_id</strong><span>排查异常时保留请求时间、模型、request_id 和返回状态。</span></div>
+        <div><strong>限制上下文</strong><span>长对话要摘要旧消息，避免无意义 token 消耗。</span></div>
+        <div><strong>设置超时</strong><span>生产调用建议设置 30-60 秒超时，并对 429/5xx 做有限重试。</span></div>
+        <div><strong>模型分层</strong><span>轻量任务优先低成本模型，复杂推理再使用高阶模型。</span></div>
+        <div><strong>监控余额</strong><span>接近预算上限时及时续费，避免线上服务被阻断。</span></div>
+      </div>
+    </main>
+    <script src="static/code-highlight.js?v=20260617-portal-38"></script>
+  </body>
+</html>

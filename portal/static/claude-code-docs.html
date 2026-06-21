@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claude Code 安装配置 - AI Proxy Portal</title>
+    <link rel="stylesheet" href="../static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="doc-page">
+    <main class="doc">
+      <a href="../#docs" class="back-link">返回门户</a>
+      <h1>Claude Code 安装配置</h1>
+      <p>把 Claude Code 配置为通过AI Proxy网关调用 <code>claude-opus-4-8</code>。请把 <code>YOUR_KEY</code> 替换为门户里分配给你的 Key。</p>
+
+      <h2>安装 Claude Code</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>安装方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>macOS / Linux / WSL</td>
+              <td><code>curl -fsSL https://claude.ai/install.sh | bash</code></td>
+            </tr>
+            <tr>
+              <td>Windows PowerShell</td>
+              <td><code>irm https://claude.ai/install.ps1 | iex</code></td>
+            </tr>
+            <tr>
+              <td>Windows CMD</td>
+              <td><code>curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code></td>
+            </tr>
+            <tr>
+              <td>Homebrew</td>
+              <td><code>brew install --cask claude-code</code></td>
+            </tr>
+            <tr>
+              <td>WinGet</td>
+              <td><code>winget install Anthropic.ClaudeCode</code></td>
+            </tr>
+            <tr>
+              <td>npm 通用安装</td>
+              <td><code>npm install -g @anthropic-ai/claude-code</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>配置环境变量</h2>
+      <p><code>ANTHROPIC_AUTH_TOKEN</code> 会作为 Bearer Token 发给网关。真实 Key 只放在本机用户环境变量或用户级 <code>settings.json</code> 中。</p>
+      <pre><code># macOS / Linux / WSL
+export AI_PROXY_API_KEY="YOUR_KEY"
+export ANTHROPIC_BASE_URL="https://example.com/portal/anthropic"
+export ANTHROPIC_AUTH_TOKEN="$AI_PROXY_API_KEY"</code></pre>
+
+      <pre><code># Windows PowerShell，设置后重新打开终端
+[Environment]::SetEnvironmentVariable("AI_PROXY_API_KEY", "YOUR_KEY", "User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://example.com/portal/anthropic", "User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", "YOUR_KEY", "User")</code></pre>
+
+      <pre><code>:: Windows CMD，设置后重新打开终端
+setx AI_PROXY_API_KEY "YOUR_KEY"
+setx ANTHROPIC_BASE_URL "https://example.com/portal/anthropic"
+setx ANTHROPIC_AUTH_TOKEN "YOUR_KEY"</code></pre>
+
+      <h2>创建配置文件</h2>
+      <p>用户级配置文件位置：macOS / Linux 为 <code>~/.claude/settings.json</code>，Windows 为 <code>%USERPROFILE%\.claude\settings.json</code>。如果写项目级配置，避免把真实 Key 放进会提交的 <code>.claude/settings.json</code>。</p>
+      <pre><code># macOS / Linux / WSL
+mkdir -p ~/.claude
+nano ~/.claude/settings.json</code></pre>
+
+      <pre><code># Windows PowerShell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude"
+notepad "$env:USERPROFILE\.claude\settings.json"</code></pre>
+
+      <h2>settings.json</h2>
+      <pre><code>{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://example.com/portal/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_KEY",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-opus-4-8",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000"
+  },
+  "skipWebFetchPreflight": true,
+  "skipDangerousModePermissionPrompt": true
+}</code></pre>
+
+      <h2>验证</h2>
+      <pre><code>claude --version
+claude</code></pre>
+
+      <h2>注意事项</h2>
+      <div class="practice-grid">
+        <div><strong>Key 不入库</strong><span>不要把真实 Key 写入项目文件、截图或公开文档。</span></div>
+        <div><strong>权限提示</strong><span><code>skipDangerousModePermissionPrompt</code> 会跳过危险模式提示，只建议在可信机器和可信项目中使用。</span></div>
+        <div><strong>TPM 匹配</strong><span><code>CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000</code> 需要 160K 或更高 TPM 档位；30K TPM 请把该值降到 30000 以下。</span></div>
+        <div><strong>环境生效</strong><span>修改系统环境变量后，重新打开终端再启动 Claude Code。</span></div>
+      </div>
+
+      <h2>官方参考</h2>
+      <ul>
+        <li><a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noreferrer">Claude Code 安装</a></li>
+        <li><a href="https://code.claude.com/docs/en/settings" target="_blank" rel="noreferrer">Claude Code 设置</a></li>
+        <li><a href="https://code.claude.com/docs/en/env-vars" target="_blank" rel="noreferrer">Claude Code 环境变量</a></li>
+      </ul>
+    </main>
+    <script src="../static/code-highlight.js?v=20260617-portal-38"></script>
+  </body>
+</html>

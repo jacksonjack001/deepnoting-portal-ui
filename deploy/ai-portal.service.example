@@ -1,0 +1,17 @@
+[Unit]
+Description=AI Proxy Portal
+After=network.target nginx.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ai-proxy
+Environment=PORTAL_BIND_HOST=127.0.0.1
+Environment=PORTAL_PORT=8090
+EnvironmentFile=-/opt/ai-proxy/.env
+ExecStart=/opt/ai-proxy/.venv/bin/python -m uvicorn portal.main:app --host 127.0.0.1 --port 8090
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

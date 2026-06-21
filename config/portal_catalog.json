@@ -1,0 +1,169 @@
+{
+  "version": 2,
+  "team": {
+    "alias": "default",
+    "team_id": "",
+    "restrict_to_team_models": false
+  },
+  "capacity_policy": {
+    "customer_share_ratio": 0.5,
+    "note": "Example capacity policy for open-source deployments.",
+    "providers": []
+  },
+  "custom": {
+    "enabled": true,
+    "name": "Custom bundle",
+    "description": "Choose models, budget, request quota, RPM and TPM.",
+    "public_note": "Example pricing. Replace it with your own business rules.",
+    "min_budget_usd": 0.05,
+    "max_budget_usd": 50,
+    "budget_step_usd": 0.05,
+    "default_budget_usd": 1,
+    "min_price_cny": 0.10,
+    "cny_per_usd": 7.20,
+    "price_multiplier": 1.00,
+    "preset_discount_rate": 0.10,
+    "min_models": 1,
+    "max_models": 6,
+    "duration_options": ["7d", "30d", "90d"],
+    "default_duration": "30d",
+    "default_request_option": "trial",
+    "default_rpm_option": "low",
+    "default_tpm_option": "low",
+    "request_options": [
+      {
+        "id": "trial",
+        "name": "Trial 100 requests",
+        "total_request_limit": 100,
+        "five_hour_request_limit": 10,
+        "daily_request_limit": 20,
+        "weekly_request_limit": 100,
+        "monthly_request_limit": 100,
+        "price_cny": "0.00"
+      },
+      {
+        "id": "standard",
+        "name": "Standard 1000 requests",
+        "total_request_limit": 1000,
+        "five_hour_request_limit": 50,
+        "daily_request_limit": 150,
+        "weekly_request_limit": 500,
+        "monthly_request_limit": 1000,
+        "price_cny": "1.00"
+      }
+    ],
+    "rpm_options": [
+      {
+        "id": "low",
+        "name": "30 RPM",
+        "rpm_limit": 30,
+        "price_cny": "0.00"
+      },
+      {
+        "id": "standard",
+        "name": "60 RPM",
+        "rpm_limit": 60,
+        "price_cny": "1.00"
+      }
+    ],
+    "tpm_options": [
+      {
+        "id": "low",
+        "name": "60000 TPM",
+        "tpm_limit": 60000,
+        "price_cny": "0.00"
+      },
+      {
+        "id": "standard",
+        "name": "120000 TPM",
+        "tpm_limit": 120000,
+        "price_cny": "1.00"
+      }
+    ]
+  },
+  "models": [
+    {
+      "id": "gpt-4o-mini",
+      "name": "GPT-4o Mini",
+      "description": "Example OpenAI-compatible model.",
+      "enabled": true,
+      "tags": ["general"],
+      "max_tokens": 128000,
+      "max_input_tokens": 128000,
+      "max_output_tokens": 16384,
+      "input_cost_per_token": 0.00000015,
+      "output_cost_per_token": 0.0000006
+    },
+    {
+      "id": "qwen-plus",
+      "name": "Qwen Plus",
+      "description": "Example model. Replace with your LiteLLM model name.",
+      "enabled": true,
+      "tags": ["general"],
+      "max_tokens": 32000,
+      "max_input_tokens": 30000,
+      "max_output_tokens": 8192,
+      "input_cost_per_token": 0.0000004,
+      "output_cost_per_token": 0.0000012
+    },
+    {
+      "id": "vision-model",
+      "name": "Vision Model",
+      "description": "Example multimodal model for image chat.",
+      "enabled": true,
+      "tags": ["vision"],
+      "max_tokens": 128000,
+      "max_input_tokens": 128000,
+      "max_output_tokens": 8192,
+      "input_cost_per_token": 0.000001,
+      "output_cost_per_token": 0.000003
+    }
+  ],
+  "plans": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "description": "Small test plan for local validation.",
+      "enabled": true,
+      "sort_order": 10,
+      "models": ["gpt-4o-mini", "qwen-plus"],
+      "max_budget_usd": 0.05,
+      "duration": "7d",
+      "total_request_limit": 100,
+      "five_hour_request_limit": 10,
+      "daily_request_limit": 20,
+      "weekly_request_limit": 100,
+      "monthly_request_limit": 100,
+      "rpm_limit": 30,
+      "tpm_limit": 60000,
+      "request_tier": "trial",
+      "rpm_tier": "low",
+      "tpm_tier": "low",
+      "discount_from_custom": false,
+      "price_cny": "0.10"
+    },
+    {
+      "id": "pro",
+      "name": "Pro",
+      "description": "Example production-like plan.",
+      "enabled": true,
+      "sort_order": 20,
+      "models": ["gpt-4o-mini", "qwen-plus", "vision-model"],
+      "max_budget_usd": 3.00,
+      "duration": "30d",
+      "total_request_limit": 1000,
+      "five_hour_request_limit": 50,
+      "daily_request_limit": 150,
+      "weekly_request_limit": 500,
+      "monthly_request_limit": 1000,
+      "rpm_limit": 60,
+      "tpm_limit": 120000,
+      "request_tier": "standard",
+      "rpm_tier": "standard",
+      "tpm_tier": "standard",
+      "discount_from_custom": false,
+      "price_cny": "22.00"
+    }
+  ]
+}
+

@@ -1,0 +1,9 @@
+{
+  "portal_base_url": "http://127.0.0.1:8090",
+  "litellm_base_url": "http://127.0.0.1:4000",
+  "litellm_public_base_url": "http://127.0.0.1:4000",
+  "resource_status_url": "",
+  "zpay_gateway": "https://example-payment-gateway.invalid/",
+  "tencent_ses_endpoint": "https://ses.tencentcloudapi.com/"
+}
+

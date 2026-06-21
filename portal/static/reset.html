@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>重置密码 - AI Proxy</title>
+    <link rel="stylesheet" href="../static/styles.css?v=20260608-portal-4" />
+  </head>
+  <body>
+    <section class="auth-shell">
+      <div class="auth-panel">
+        <div class="brand auth-brand">
+          <span class="brand-mark">AI</span>
+          <div>
+            <strong>AI Proxy</strong>
+            <small>重置密码</small>
+          </div>
+        </div>
+        <form class="auth-form" id="resetForm" data-token="__RESET_TOKEN__">
+          <label>
+            新密码
+            <input id="newPassword" type="password" autocomplete="new-password" minlength="8" required />
+          </label>
+          <button type="submit">保存并登录</button>
+          <a class="back-link" href="../">返回登录</a>
+        </form>
+      </div>
+    </section>
+    <div class="toast" id="toast"></div>
+    <script src="../static/reset.js?v=20260608-portal-4"></script>
+  </body>
+</html>

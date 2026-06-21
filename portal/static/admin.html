@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Proxy后台配置</title>
+    <link rel="stylesheet" href="static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="admin-page">
+    <main class="admin-shell">
+      <header class="admin-head">
+        <div class="brand">
+          <span class="brand-mark">AI</span>
+          <div>
+            <strong>AI Proxy后台配置</strong>
+            <small>模型、套餐、额度和调用限制</small>
+          </div>
+        </div>
+        <a class="mini-button" href="./">返回门户</a>
+      </header>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h1>Catalog JSON</h1>
+            <p>修改后立即影响新下单。已创建订单会继续使用订单快照。</p>
+          </div>
+          <div class="admin-actions">
+            <input id="adminToken" type="password" autocomplete="off" placeholder="X-Admin-Token" />
+            <button class="secondary" type="button" id="loadCatalog">加载</button>
+            <button class="secondary" type="button" id="syncCatalog">同步模型配置</button>
+            <button type="button" id="saveCatalog">保存</button>
+          </div>
+        </div>
+        <textarea class="admin-editor" id="catalogEditor" spellcheck="false"></textarea>
+      </section>
+    </main>
+    <div class="toast" id="toast"></div>
+    <script src="static/admin.js?v=20260617-portal-38"></script>
+  </body>
+</html>

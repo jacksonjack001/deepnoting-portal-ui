@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex 安装配置 - AI Proxy Portal</title>
+    <link rel="stylesheet" href="../static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="doc-page">
+    <main class="doc">
+      <a href="../#docs" class="back-link">返回门户</a>
+      <h1>Codex 安装配置</h1>
+      <p>把 Codex 配置为通过AI Proxy网关调用 <code>gpt-5.5</code>。请把 <code>YOUR_KEY</code> 替换为门户里分配给你的 Key。</p>
+
+      <h2>安装 Codex</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>平台</th>
+              <th>安装方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>macOS / Linux</td>
+              <td><code>curl -fsSL https://chatgpt.com/codex/install.sh | sh</code></td>
+            </tr>
+            <tr>
+              <td>Windows PowerShell</td>
+              <td><code>powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"</code></td>
+            </tr>
+            <tr>
+              <td>npm 通用安装</td>
+              <td><code>npm install -g @openai/codex</code></td>
+            </tr>
+            <tr>
+              <td>Homebrew</td>
+              <td><code>brew install --cask codex</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>配置环境变量</h2>
+      <p>下面配置中的 <code>env_key = "AI_PROXY_API_KEY"</code> 会读取同名环境变量。真实 Key 只放在本机用户环境变量里，不要提交到项目仓库。</p>
+      <pre><code># macOS / Linux / WSL
+export AI_PROXY_API_KEY="YOUR_KEY"</code></pre>
+
+      <pre><code># Windows PowerShell，设置后重新打开终端
+[Environment]::SetEnvironmentVariable("AI_PROXY_API_KEY", "YOUR_KEY", "User")</code></pre>
+
+      <pre><code>:: Windows CMD，设置后重新打开终端
+setx AI_PROXY_API_KEY "YOUR_KEY"</code></pre>
+
+      <h2>创建配置文件</h2>
+      <p>配置文件位置：macOS / Linux 为 <code>~/.codex/config.toml</code>，Windows 为 <code>%USERPROFILE%\.codex\config.toml</code>。</p>
+      <pre><code># macOS / Linux / WSL
+mkdir -p ~/.codex
+nano ~/.codex/config.toml</code></pre>
+
+      <pre><code># Windows PowerShell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex"
+notepad "$env:USERPROFILE\.codex\config.toml"</code></pre>
+
+      <h2>config.toml</h2>
+      <pre><code>model_provider = "ai-proxy"
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "xhigh"
+model_reasoning_summary = "none"
+model_context_window = 1050000
+model_auto_compact_token_limit = 945000
+tool_output_token_limit = 6000
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+suppress_unstable_features_warning = true
+cache_ttl = "30m"
+
+[model_providers.ai-proxy]
+name = "OpenAI"
+base_url = "https://llm.example.com"
+wire_api = "responses"
+requires_openai_auth = false
+env_key = "AI_PROXY_API_KEY"
+supports_websockets = false
+
+[features]
+responses_websockets_v2 = false
+multi_agent = true
+remote_connections = true
+
+[agents]
+max_threads = 4
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4</code></pre>
+
+      <h2>验证</h2>
+      <pre><code>codex --version
+codex</code></pre>
+
+      <h2>注意事项</h2>
+      <div class="practice-grid">
+        <div><strong>Key 不入库</strong><span>不要把真实 Key 写入项目文件、截图或公开文档。</span></div>
+        <div><strong>危险权限</strong><span><code>approval_policy = "never"</code> 和 <code>sandbox_mode = "danger-full-access"</code> 只建议在可信机器和可信项目中使用。</span></div>
+        <div><strong>缓存生效</strong><span>修改环境变量后，重新打开终端再启动 Codex。</span></div>
+      </div>
+
+      <h2>官方参考</h2>
+      <ul>
+        <li><a href="https://developers.openai.com/codex/cli" target="_blank" rel="noreferrer">OpenAI Codex CLI</a></li>
+        <li><a href="https://developers.openai.com/codex/config-reference" target="_blank" rel="noreferrer">Codex 配置参考</a></li>
+      </ul>
+    </main>
+    <script src="../static/code-highlight.js?v=20260617-portal-38"></script>
+  </body>
+</html>

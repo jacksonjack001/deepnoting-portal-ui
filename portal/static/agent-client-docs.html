@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent 监控客户端配置 - AI Proxy Portal</title>
+    <link rel="stylesheet" href="../static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="doc-page">
+    <main class="doc">
+      <a href="../#agents" class="back-link">返回 Agent 看板</a>
+      <h1>Agent 监控客户端配置</h1>
+      <p>把 Codex / Claude Code 的 hook 事件上报到AI Proxy门户后，“当前 Agent 任务”页面会展示会话首个问题、当前状态、工具步骤、模型、token 和上下文窗口。</p>
+
+      <div class="practice-grid">
+        <div><strong>上报地址</strong><span><code>https://example.com/portal/api/agent/events</code></span></div>
+        <div><strong>认证方式</strong><span><code>Authorization: Bearer YOUR_KEY</code>，使用门户分配的 API Key。</span></div>
+        <div><strong>显示位置</strong><span>登录门户后进入左侧“当前 Agent 任务”。</span></div>
+      </div>
+
+      <h2>1. 准备环境变量</h2>
+      <p>建议把 Key 放进用户级环境变量。下面的 <code>YOUR_KEY</code> 替换为你的AI Proxy API Key。</p>
+      <pre><code># macOS / Linux / WSL
+export AI_PROXY_API_KEY="YOUR_KEY"
+export AI_PROXY_AGENT_ENDPOINT="https://example.com/portal/api/agent/events"
+export CODEX_CONTEXT_WINDOW="1050000"</code></pre>
+
+      <pre><code># Windows PowerShell，设置后重新打开终端
+[Environment]::SetEnvironmentVariable("AI_PROXY_API_KEY", "YOUR_KEY", "User")
+[Environment]::SetEnvironmentVariable("AI_PROXY_AGENT_ENDPOINT", "https://example.com/portal/api/agent/events", "User")
+[Environment]::SetEnvironmentVariable("CODEX_CONTEXT_WINDOW", "1050000", "User")</code></pre>
+
+      <h2>2. 先测试上报接口</h2>
+      <p>这一步用于确认 Key、网络和门户服务都正常。执行成功后，看板里会出现一条 <code>manual-test</code> 测试会话。</p>
+      <pre><code># macOS / Linux / WSL
+curl -fsS -X POST https://example.com/portal/api/agent/events \
+  -H "Authorization: Bearer $AI_PROXY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client": "manual-test",
+    "session_id": "manual-test-001",
+    "event_type": "UserPromptSubmit",
+    "first_prompt": "测试 Agent 看板上报",
+    "model": "gpt-5.5",
+    "context_window": 1050000,
+    "used_tokens": 12000,
+    "cwd": "/tmp/agent-monitor-test"
+  }'</code></pre>
+
+      <pre><code># Windows PowerShell
+$body = @{
+  client = "manual-test"
+  session_id = "manual-test-001"
+  event_type = "UserPromptSubmit"
+  first_prompt = "测试 Agent 看板上报"
+  model = "gpt-5.5"
+  context_window = 1050000
+  used_tokens = 12000
+  cwd = "C:\agent-monitor-test"
+} | ConvertTo-Json
+Invoke-RestMethod -Method Post "https://example.com/portal/api/agent/events" `
+  -Headers @{ Authorization = "Bearer $env:AI_PROXY_API_KEY" } `
+  -ContentType "application/json" `
+  -Body $body</code></pre>
+
+      <h2>3. Claude Code 配置</h2>
+      <p>Claude Code 可以直接使用 HTTP hook。用户级配置文件位置：macOS / Linux 为 <code>~/.claude/settings.json</code>，Windows 为 <code>%USERPROFILE%\.claude\settings.json</code>。如果文件里已经有配置，请合并 <code>hooks</code> 字段，不要直接覆盖原文件。</p>
+      <pre><code># macOS / Linux / WSL
+mkdir -p ~/.claude
+nano ~/.claude/settings.json</code></pre>
+
+      <pre><code># Windows PowerShell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude"
+notepad "$env:USERPROFILE\.claude\settings.json"</code></pre>
+
+      <h3>settings.json 示例</h3>
+      <pre><code>{
+  "env": {
+    "AI_PROXY_API_KEY": "YOUR_KEY",
+    "ANTHROPIC_BASE_URL": "https://example.com/portal/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_KEY",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-opus-4-8",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "http",
+            "url": "https://example.com/portal/api/agent/events",
+            "timeout": 5,
+            "headers": {
+              "Authorization": "Bearer $AI_PROXY_API_KEY",
+              "Content-Type": "application/json",
+              "X-Agent-Client": "claude-code",
+              "X-Agent-Model": "claude-opus-4-8",
+              "X-Agent-Context-Window": "1000000"
+            },
+            "allowedEnvVars": ["AI_PROXY_API_KEY"]
+          }
+        ]
+      }
+    ]
+  },
+  "skipWebFetchPreflight": true,
+  "skipDangerousModePermissionPrompt": true
+}</code></pre>
+
+      <p>保存后重新打开终端，启动 <code>claude</code> 并发起一次对话。看板会在收到 <code>UserPromptSubmit</code>、工具调用、停止或压缩事件后更新。</p>
+
+      <h2>4. Codex 配置</h2>
+      <p>Codex 的 hook 使用命令执行方式最稳。先放一个本地转发脚本，再在 hooks 配置里调用它。</p>
+
+      <h3>创建转发脚本</h3>
+      <p>脚本位置建议使用 <code>~/.codex/hooks/ai-proxy-agent-event.py</code>；Windows 对应 <code>%USERPROFILE%\.codex\hooks\ai-proxy-agent-event.py</code>。</p>
+      <pre><code># macOS / Linux / WSL
+mkdir -p ~/.codex/hooks
+nano ~/.codex/hooks/ai-proxy-agent-event.py
+chmod +x ~/.codex/hooks/ai-proxy-agent-event.py</code></pre>
+
+      <pre><code># Windows PowerShell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\hooks"
+notepad "$env:USERPROFILE\.codex\hooks\ai-proxy-agent-event.py"</code></pre>
+
+      <h3>ai-proxy-agent-event.py</h3>
+      <pre><code>#!/usr/bin/env python3
+import json
+import os
+import sys
+import urllib.request
+
+
+endpoint = os.getenv("AI_PROXY_AGENT_ENDPOINT", "https://example.com/portal/api/agent/events")
+api_key = os.getenv("AI_PROXY_API_KEY")
+
+if not api_key:
+    sys.exit(0)
+
+try:
+    payload = json.load(sys.stdin)
+except Exception:
+    payload = {}
+
+payload.setdefault("client", "codex")
+
+context_window = os.getenv("CODEX_CONTEXT_WINDOW")
+if context_window and not payload.get("context_window"):
+    try:
+        payload["context_window"] = int(context_window)
+    except ValueError:
+        pass
+
+used_tokens = payload.get("used_tokens") or payload.get("total_tokens") or payload.get("token_count")
+if used_tokens is not None and payload.get("context_window") and not payload.get("remaining_context"):
+    try:
+        payload["remaining_context"] = max(int(payload["context_window"]) - int(used_tokens), 0)
+    except (TypeError, ValueError):
+        pass
+
+body = json.dumps(payload).encode("utf-8")
+request = urllib.request.Request(
+    endpoint,
+    data=body,
+    headers={
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "X-Agent-Client": "codex",
+    },
+    method="POST",
+)
+
+try:
+    urllib.request.urlopen(request, timeout=5).read()
+except Exception as exc:
+    print(f"ai-proxy agent monitor skipped: {exc}", file=sys.stderr)
+
+sys.exit(0)</code></pre>
+
+      <h3>配置 hooks.json</h3>
+      <p>创建或合并 <code>~/.codex/hooks.json</code>。Windows 路径为 <code>%USERPROFILE%\.codex\hooks.json</code>。</p>
+      <pre><code>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步 Agent 状态"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步用户问题"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步工具开始"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步工具结束"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步压缩开始"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步压缩结束"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.codex/hooks/ai-proxy-agent-event.py",
+            "commandWindows": "py %USERPROFILE%\\.codex\\hooks\\ai-proxy-agent-event.py",
+            "timeout": 10,
+            "statusMessage": "同步任务完成"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+      <p>启动 <code>codex</code> 后，如出现 hook 信任确认，请检查命令内容后确认。也可以在 Codex 内执行 <code>/hooks</code> 查看当前 hook 状态。</p>
+
+      <h2>5. 看板字段说明</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>字段</th>
+              <th>来源</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>第一个问题</td>
+              <td><code>prompt</code> / <code>first_prompt</code> / <code>user_prompt</code></td>
+              <td>同一会话只保留首次问题，便于看板识别任务。</td>
+            </tr>
+            <tr>
+              <td>当前状态</td>
+              <td><code>hook_event_name</code> / <code>event_type</code></td>
+              <td>根据开始、工具调用、压缩、停止等事件转换为运行中、工具执行中、已完成等状态。</td>
+            </tr>
+            <tr>
+              <td>已用 Token</td>
+              <td><code>used_tokens</code> / <code>total_tokens</code> / <code>usage.total_tokens</code></td>
+              <td>客户端原始 hook 不一定提供 token；没有上报时显示 <code>-</code>。</td>
+            </tr>
+            <tr>
+              <td>剩余上下文</td>
+              <td><code>remaining_context</code> 或 <code>context_window - used_tokens</code></td>
+              <td>只上报窗口大小时会显示 <code>未上报 / 窗口大小</code>。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>6. 常见问题</h2>
+      <div class="practice-grid">
+        <div><strong>看板没有数据</strong><span>先执行第 2 步测试接口。如果测试成功但客户端无数据，检查 hook 文件路径、Key 环境变量和客户端是否重启。</span></div>
+        <div><strong>只显示状态不显示 token</strong><span>这是正常情况。很多客户端 hook 默认不携带 token 统计；真实用量仍可在门户“总览与用量”查看。</span></div>
+        <div><strong>429 tokens 限速</strong><span><code>CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000</code> 会要求 160K 或更高 TPM；30K TPM 档位请降低输出上限或升级 TPM。</span></div>
+        <div><strong>避免阻塞编码</strong><span>HTTP 超时建议保持 5-10 秒；脚本失败时退出码保持 0，避免影响 Codex / Claude Code 主流程。</span></div>
+        <div><strong>安全边界</strong><span>不要把真实 Key 写进项目仓库。hook payload 会在服务端做敏感字段脱敏后再保存。</span></div>
+      </div>
+
+      <h2>官方参考</h2>
+      <ul>
+        <li><a href="https://developers.openai.com/codex/hooks" target="_blank" rel="noreferrer">OpenAI Codex hooks</a></li>
+        <li><a href="https://developers.openai.com/codex/config-advanced" target="_blank" rel="noreferrer">OpenAI Codex advanced configuration</a></li>
+        <li><a href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noreferrer">Claude Code hooks</a></li>
+      </ul>
+    </main>
+    <script src="../static/code-highlight.js?v=20260617-portal-38"></script>
+  </body>
+</html>

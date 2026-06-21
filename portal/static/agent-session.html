@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent 会话记录 - AI Proxy Portal</title>
+    <link rel="stylesheet" href="../../static/styles.css?v=20260617-portal-38" />
+  </head>
+  <body class="doc-page">
+    <main class="doc" id="agentSessionPage" data-session-id="__AGENT_SESSION_ID__">
+      <div class="agent-detail-head">
+        <a href="../../#agents" class="back-link">返回 Agent 看板</a>
+        <button class="secondary" type="button" id="refreshSession">刷新</button>
+      </div>
+
+      <section class="agent-detail-title">
+        <span class="agent-client" id="agentClient">agent</span>
+        <h1 id="agentTitle">Agent 会话记录</h1>
+        <p id="agentSubtitle">正在加载会话事件。</p>
+      </section>
+
+      <section class="agent-detail-grid" id="agentSummary"></section>
+
+      <section>
+        <h2>交互事件</h2>
+        <div class="agent-events" id="agentEvents"></div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="../../static/code-highlight.js?v=20260617-portal-38"></script>
+    <script>
+      const page = document.getElementById("agentSessionPage");
+      const sessionId = page.dataset.sessionId;
+
+      function $(id) {
+        return document.getElementById(id);
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function formatInt(value) {
+        if (value === null || value === undefined || value === "") return "-";
+        return Number(value).toLocaleString("zh-CN");
+      }
+
+      function formatLocalTime(value) {
+        if (!value) return "-";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString("zh-CN", { hour12: false });
+      }
+
+      function agentStatusLabel(status) {
+        const labels = {
+          running: "运行中",
+          tool_running: "工具执行中",
+          tool_done: "工具完成",
+          compacting: "压缩上下文",
+          subagent_running: "子任务执行中",
+          completed: "已完成",
+          failed: "失败",
+          stale: "疑似中断",
+        };
+        return labels[status] || status || "-";
+      }
+
+      function metric(label, value) {
+        return `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+      }
+
+      function renderSession(data) {
+        const session = data.session || {};
+        const events = data.events || [];
+        const context =
+          session.context_window && session.remaining_context !== null && session.remaining_context !== undefined
+            ? `${formatInt(session.remaining_context)} / ${formatInt(session.context_window)}`
+            : session.context_window
+            ? `未上报 / ${formatInt(session.context_window)}`
+            : "-";
+
+        $("agentClient").textContent = session.client || "agent";
+        $("agentTitle").textContent = session.first_prompt || "Agent 会话记录";
+        $("agentSubtitle").textContent = `${agentStatusLabel(session.status)} · ${session.session_id || "-"} · ${session.cwd || "-"}`;
+        $("agentSummary").innerHTML = [
+          metric("状态", agentStatusLabel(session.status)),
+          metric("当前步骤", session.current_step || "-"),
+          metric("工具/命令", session.current_tool || "-"),
+          metric("模型", session.model || "-"),
+          metric("已用 Token", session.used_tokens ? formatInt(session.used_tokens) : "-"),
+          metric("剩余上下文", context),
+          metric("事件数", formatInt(session.event_count || events.length)),
+          metric("开始时间", formatLocalTime(session.started_at)),
+          metric("最近上报", formatLocalTime(session.last_seen_at)),
+          metric("完成时间", formatLocalTime(session.finished_at)),
+          metric("工作目录", session.cwd || "-"),
+          metric("会话 ID", session.session_id || "-"),
+        ].join("");
+
+        $("agentEvents").innerHTML = events.length
+          ? events
+              .map((event) => {
+                const payload = JSON.stringify(event.payload ?? {}, null, 2);
+                return `<article class="agent-event">
+                  <div class="agent-event-head">
+                    <span class="agent-status">${escapeHtml(event.event_type || "event")}</span>
+                    <time>${escapeHtml(formatLocalTime(event.created_at))}</time>
+                  </div>
+                  <pre><code>${escapeHtml(payload)}</code></pre>
+                </article>`;
+              })
+              .join("")
+          : '<div class="empty">暂无事件记录</div>';
+        if (window.highlightCodeBlocks) window.highlightCodeBlocks($("agentEvents"));
+      }
+
+      async function loadSession() {
+        $("agentEvents").innerHTML = '<div class="empty">正在加载</div>';
+        const response = await fetch(`../../api/agent/sessions/${encodeURIComponent(sessionId)}`, {
+          credentials: "same-origin",
+        });
+        if (response.status === 401) {
+          $("agentTitle").textContent = "需要登录";
+          $("agentSubtitle").innerHTML = '<a href="../../">返回门户登录</a>';
+          $("agentSummary").innerHTML = "";
+          $("agentEvents").innerHTML = "";
+          return;
+        }
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "加载失败");
+        }
+        renderSession(data);
+      }
+
+      $("refreshSession").addEventListener("click", () => {
+        loadSession().catch((error) => {
+          $("agentEvents").innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+        });
+      });
+
+      loadSession().catch((error) => {
+        $("agentSubtitle").textContent = error.message;
+        $("agentEvents").innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+      });
+    </script>
+  </body>
+</html>

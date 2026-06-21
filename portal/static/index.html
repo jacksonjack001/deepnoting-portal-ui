@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Proxy AI 控制台</title>
+    <link rel="stylesheet" href="static/styles.css?v=20260620-chat-optional-params" />
+  </head>
+  <body>
+    <section class="boot-shell" id="bootView">
+      <div class="boot-card">
+        <span class="brand-mark">AI</span>
+        <div>
+          <strong>AI Proxy</strong>
+          <small>正在进入账户控制台</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-shell hidden" id="authView">
+      <div class="auth-layout">
+        <aside class="auth-context">
+          <div class="brand auth-context-brand">
+            <span class="brand-mark">AI</span>
+            <div>
+              <strong>AI Proxy</strong>
+              <small>AI 服务控制台</small>
+            </div>
+          </div>
+          <div class="auth-context-main">
+            <div class="auth-hero-copy">
+              <span class="auth-eyebrow">Native Frontier AI Agent</span>
+              <h1>原生前沿 AI Agent 探索能力边界</h1>
+              <p class="auth-lead">一个入口统一前沿模型、Agent 任务、代码协作、用量结算与调用文档。把 Key、套餐、监控和新闻更新放在同一个工作台，减少切换成本。</p>
+            </div>
+            <div class="auth-showcase">
+              <div class="capability-stage" aria-label="AI Proxy完整能力链路动图">
+                <svg class="capability-svg" viewBox="0 0 720 390" role="img" aria-label="AI Proxy AI Agent 能力链路，从前沿模型、API Key、代码协作、Agent 监控、用量账单和文档新闻汇聚到 AI Agent 工作台。">
+                  <desc>从前沿模型、API Key、代码协作、Agent 监控、用量账单和文档新闻汇聚到 AI Agent 工作台。</desc>
+                  <defs>
+                    <marker id="capabilityArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                      <path d="M0,0 L8,4 L0,8 Z" fill="#5eead4" />
+                    </marker>
+                  </defs>
+                  <g class="capability-links">
+                    <path d="M180 84 C280 84 304 184 360 194" />
+                    <path d="M540 84 C440 84 416 184 360 194" />
+                    <path d="M168 210 C250 210 284 204 360 194" />
+                    <path d="M552 210 C470 210 436 204 360 194" />
+                    <path d="M190 326 C282 300 310 246 360 194" />
+                    <path d="M530 326 C438 300 410 246 360 194" />
+                  </g>
+                  <g class="capability-core">
+                    <rect x="285" y="144" width="150" height="100" rx="16" />
+                    <text x="360" y="182">AI Agent</text>
+                    <text x="360" y="209">工作台</text>
+                  </g>
+                  <g class="capability-node node-model" transform="translate(70 46)">
+                    <rect width="150" height="76" rx="12" />
+                    <text x="75" y="31">前沿模型</text>
+                    <text x="75" y="55">多模型调用</text>
+                  </g>
+                  <g class="capability-node node-key" transform="translate(500 46)">
+                    <rect width="150" height="76" rx="12" />
+                    <text x="75" y="31">API Key</text>
+                    <text x="75" y="55">登录与复制</text>
+                  </g>
+                  <g class="capability-node node-code" transform="translate(58 172)">
+                    <rect width="162" height="76" rx="12" />
+                    <text x="81" y="31">代码协作</text>
+                    <text x="81" y="55">复制即用</text>
+                  </g>
+                  <g class="capability-node node-agent" transform="translate(500 172)">
+                    <rect width="162" height="76" rx="12" />
+                    <text x="81" y="31">Agent 监控</text>
+                    <text x="81" y="55">任务状态</text>
+                  </g>
+                  <g class="capability-node node-usage" transform="translate(70 288)">
+                    <rect width="150" height="76" rx="12" />
+                    <text x="75" y="31">用量结算</text>
+                    <text x="75" y="55">余额订单</text>
+                  </g>
+                  <g class="capability-node node-news" transform="translate(500 288)">
+                    <rect width="150" height="76" rx="12" />
+                    <text x="75" y="31">文档新闻</text>
+                    <text x="75" y="55">浏览排序</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="auth-feature-grid" aria-label="AI Proxy功能介绍">
+                <div class="auth-feature">
+                  <strong>前沿模型入口</strong>
+                  <span>统一接入可用模型，按需选择并复制配置。</span>
+                </div>
+                <div class="auth-feature">
+                  <strong>Agent 任务监控</strong>
+                  <span>查看会话状态、工具步骤、模型与上下文窗口。</span>
+                </div>
+                <div class="auth-feature">
+                  <strong>代码协作配置</strong>
+                  <span>覆盖 Codex、Claude Code 等开发场景。</span>
+                </div>
+                <div class="auth-feature">
+                  <strong>用量与新闻同步</strong>
+                  <span>余额、订单、Token 消耗和模型变更集中查看。</span>
+                </div>
+              </div>
+            </div>
+            <div class="auth-metrics">
+              <div>
+                <span>试用门槛</span>
+                <strong id="trialPrice">￥0.32</strong>
+              </div>
+              <div>
+                <span>登录方式</span>
+                <strong>邮箱 / Key</strong>
+              </div>
+              <div>
+                <span>调用协议</span>
+                <strong>OpenAI</strong>
+              </div>
+            </div>
+          </div>
+          <div class="auth-flow">
+            <div><span>1</span><strong>注册 / Key 登录</strong></div>
+            <div><span>2</span><strong>选择套餐与模型</strong></div>
+            <div><span>3</span><strong>复制配置开始调用</strong></div>
+            <div><span>4</span><strong>监控任务和用量</strong></div>
+          </div>
+        </aside>
+
+        <div class="auth-panel">
+          <div class="auth-card">
+            <div class="auth-panel-head">
+              <div class="brand auth-brand">
+                <span class="brand-mark">AI</span>
+                <div>
+                  <strong>AI Proxy</strong>
+                  <small>AI 服务控制台</small>
+                </div>
+              </div>
+              <div>
+                <h2>进入控制台</h2>
+                <p>登录后可查看模型、Key、用量、订单、Agent 任务和调用文档。</p>
+              </div>
+            </div>
+
+            <div class="auth-tabs" role="tablist">
+              <button class="active" type="button" data-auth-tab="login">登录</button>
+              <button type="button" data-auth-tab="keyLogin">Key 登录</button>
+              <button type="button" data-auth-tab="register">注册</button>
+              <button type="button" data-auth-tab="forgot">找回密码</button>
+              <button type="button" data-auth-tab="news">新闻更新</button>
+            </div>
+
+            <div class="auth-body">
+              <form class="auth-form" id="loginForm" data-auth-form="login">
+                <label>
+                  邮箱
+                  <input id="loginEmail" type="email" autocomplete="email" required />
+                </label>
+                <label>
+                  密码
+                  <input id="loginPassword" type="password" autocomplete="current-password" required />
+                </label>
+                <button type="submit">登录</button>
+              </form>
+
+              <form class="auth-form hidden" id="keyLoginForm" data-auth-form="keyLogin">
+                <label>
+                  API Key
+                  <input id="loginApiKey" type="password" autocomplete="off" spellcheck="false" required />
+                </label>
+                <button type="submit">使用 Key 登录</button>
+              </form>
+
+              <form class="auth-form hidden" id="registerForm" data-auth-form="register">
+                <label>
+                  邮箱
+                  <input id="registerEmail" type="email" autocomplete="email" required />
+                </label>
+                <label>
+                  密码
+                  <input id="registerPassword" type="password" autocomplete="new-password" minlength="8" required />
+                </label>
+                <button type="submit">注册并获取 Key</button>
+              </form>
+
+              <form class="auth-form hidden" id="forgotForm" data-auth-form="forgot">
+                <label>
+                  邮箱
+                  <input id="forgotEmail" type="email" autocomplete="email" required />
+                </label>
+                <button type="submit">发送重置邮件</button>
+              </form>
+
+              <div class="auth-news hidden" data-auth-form="news">
+                <div class="auth-news-head">
+                  <h2>新闻更新</h2>
+                  <p>最新模型变更、套餐和调用说明会同步在这里。</p>
+                </div>
+                <div class="news-list compact" id="publicNewsList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="app-frame hidden" id="appView">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">AI</span>
+          <div>
+            <strong>AI Proxy</strong>
+            <small>AI 服务控制台</small>
+          </div>
+        </div>
+        <nav>
+          <a class="active" href="#dashboard" data-page-link="dashboardPage">总览与用量</a>
+          <a href="#chat" data-page-link="chatPage">聊天</a>
+          <a href="#agents" data-page-link="agentsPage">当前 Agent 任务</a>
+          <a href="#billing" data-page-link="billingPage">套餐与订单</a>
+          <a href="#docs" data-page-link="docsPage">调用文档</a>
+          <a href="#news" data-page-link="newsPage">新闻更新</a>
+        </nav>
+      </aside>
+
+      <main class="shell">
+        <header class="topbar">
+          <div>
+            <h1 id="pageTitle">总览与用量</h1>
+            <p id="userEmail">-</p>
+          </div>
+          <div class="topbar-actions">
+            <div class="status-pill" id="gatewayStatus">检查中</div>
+            <button class="secondary" type="button" id="refreshBtn">刷新</button>
+            <button class="secondary" type="button" id="logoutBtn">退出</button>
+          </div>
+        </header>
+
+        <section class="page-view active" id="dashboardPage" data-title="总览与用量">
+          <section class="kpi-grid" id="overview">
+            <article class="kpi">
+              <span>Key 状态</span>
+              <strong id="kpiStatus">-</strong>
+            </article>
+            <article class="kpi">
+              <span>剩余金额</span>
+              <strong id="kpiRemaining">-</strong>
+            </article>
+            <article class="kpi">
+              <span>累计消耗</span>
+              <strong id="kpiSpend">-</strong>
+            </article>
+            <article class="kpi">
+              <span>累计 Token</span>
+              <strong id="kpiTokens">-</strong>
+            </article>
+          </section>
+
+          <section class="grid">
+            <article class="panel" id="api">
+              <div class="panel-head">
+                <div>
+                  <h2>API Key</h2>
+                  <p>Base URL：<span id="summaryBase">-</span></p>
+                </div>
+                <button class="secondary" type="button" id="copyKey">复制</button>
+              </div>
+              <code class="key-text" id="apiKey">-</code>
+              <dl class="summary compact">
+                <div><dt>RPM</dt><dd id="limitRpm">-</dd></div>
+                <div><dt>TPM</dt><dd id="limitTpm">-</dd></div>
+                <div><dt>总请求</dt><dd id="limitTotalRequests">-</dd></div>
+                <div><dt>5小时请求</dt><dd id="limitFiveHourRequests">-</dd></div>
+                <div><dt>今日请求</dt><dd id="limitDailyRequests">-</dd></div>
+                <div><dt>本周请求</dt><dd id="limitWeeklyRequests">-</dd></div>
+                <div><dt>过期时间</dt><dd id="limitExpires">-</dd></div>
+              </dl>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>余额</h2>
+                  <p>按当前 Key 的可用额度统计。</p>
+                </div>
+              </div>
+              <div class="budget-meter">
+                <div id="budgetBar"></div>
+              </div>
+              <dl class="summary">
+                <div><dt>预算上限</dt><dd id="budgetMax">-</dd></div>
+                <div><dt>已用金额</dt><dd id="budgetSpend">-</dd></div>
+                <div><dt>剩余金额</dt><dd id="budgetRemaining">-</dd></div>
+              </dl>
+            </article>
+          </section>
+
+          <section class="panel wide" id="usage">
+            <div class="panel-head">
+              <div>
+                <h2>用量分析</h2>
+                <p>按当前账号 API Key 统计。<span id="usageUpdatedAt">-</span></p>
+              </div>
+              <div class="usage-actions">
+                <span class="live-pill" id="liveStatus">实时</span>
+                <div class="segmented" id="metricTabs">
+                  <button class="active" type="button" data-metric="tokens">Token</button>
+                  <button type="button" data-metric="spend">费用</button>
+                </div>
+                <div class="segmented" id="periodTabs">
+                  <button class="active" type="button" data-period="daily">日</button>
+                  <button type="button" data-period="weekly">周</button>
+                  <button type="button" data-period="monthly">月</button>
+                </div>
+              </div>
+            </div>
+            <div class="chart" id="usageChart"></div>
+            <div class="split-table">
+              <div>
+                <h3>按模型</h3>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>模型</th>
+                        <th>请求</th>
+                        <th>Token</th>
+                        <th>金额</th>
+                      </tr>
+                    </thead>
+                    <tbody id="modelSpendRows"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <h3>最近调用</h3>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>时间</th>
+                        <th>模型</th>
+                        <th>Token</th>
+                        <th>金额</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recentLogRows"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel wide" id="models">
+            <div class="panel-head">
+              <div>
+                <h2>模型与限制</h2>
+                <p>显示当前 Key 可调用模型的定价、上下文窗口、限速和请求额度。</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>模型</th>
+                    <th>上下文</th>
+                    <th>输入上限</th>
+                    <th>输出上限</th>
+                    <th>定价 / 百万Token</th>
+                    <th>限速</th>
+                    <th>请求额度</th>
+                    <th>估算剩余输出 Token</th>
+                    <th>已用 Token</th>
+                  </tr>
+                </thead>
+                <tbody id="modelLimitRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+        <section class="page-view hidden" id="chatPage" data-title="聊天">
+          <section class="chat-layout">
+            <aside class="panel chat-history-panel">
+              <div class="chat-history-head">
+                <div>
+                  <h3>历史对话</h3>
+                  <p>保存在当前浏览器</p>
+                </div>
+                <button class="secondary mini-action" type="button" id="clearChatHistory">清空</button>
+              </div>
+              <div class="chat-history-list" id="chatHistoryList"></div>
+            </aside>
+            <article class="panel chat-panel">
+              <div class="panel-head chat-head">
+                <div>
+                  <h2>多轮聊天</h2>
+                  <p>使用当前账号已订购模型调用，消耗会计入 API Key 用量。</p>
+                </div>
+                <div class="chat-controls">
+                  <select id="chatModel"></select>
+                  <button class="secondary" type="button" id="newChat">新对话</button>
+                </div>
+              </div>
+              <div class="chat-params">
+                <label>温度<input id="chatTemperature" type="number" min="0" max="2" step="0.1" placeholder="默认" /></label>
+                <label>Top P<input id="chatTopP" type="number" min="0.01" max="1" step="0.05" placeholder="默认" /></label>
+                <label>输出<input id="chatMaxTokens" type="number" min="1" max="8192" step="1" placeholder="自动" /></label>
+                <label>频率惩罚<input id="chatFrequencyPenalty" type="number" min="-2" max="2" step="0.1" placeholder="默认" /></label>
+                <label>存在惩罚<input id="chatPresencePenalty" type="number" min="-2" max="2" step="0.1" placeholder="默认" /></label>
+              </div>
+              <div class="chat-thread" id="chatThread"></div>
+              <div class="chat-attachment-preview" id="chatAttachmentPreview" hidden></div>
+              <form class="chat-compose" id="chatForm">
+                <textarea id="chatInput" rows="3" placeholder="输入消息，支持粘贴图片，Enter 发送，Shift + Enter 换行"></textarea>
+                <input id="chatImageInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden />
+                <button class="secondary" type="button" id="chatAttachImage">图片</button>
+                <button type="submit" id="chatSend">发送</button>
+              </form>
+              <p class="chat-status" id="chatStatus">-</p>
+            </article>
+          </section>
+        </section>
+
+        <section class="page-view hidden" id="agentsPage" data-title="当前 Agent 任务">
+          <section class="panel wide">
+            <div class="panel-head">
+              <div>
+                <h2>当前 Agent 任务</h2>
+                <p>通过 Codex / Claude Code hooks 上报当前会话状态；未配置 hooks 时这里只能看到空列表。</p>
+              </div>
+              <div class="panel-actions">
+                <a class="mini-button" href="docs/agent-client" target="_blank" rel="noreferrer">客户端配置教程</a>
+                <span class="doc-view-count" data-doc-view="docs:agent-client"></span>
+                <button class="secondary" type="button" id="refreshAgents">刷新</button>
+              </div>
+            </div>
+            <div class="agent-kpis">
+              <div><span>活动任务</span><strong id="agentActiveCount">-</strong></div>
+              <div><span>全部会话</span><strong id="agentTotalCount">-</strong></div>
+              <div><span>疑似中断</span><strong id="agentStaleCount">-</strong></div>
+              <div><span>已完成</span><strong id="agentCompletedCount">-</strong></div>
+            </div>
+            <div class="agent-task-board" id="agentTaskBoard"></div>
+          </section>
+
+          <section class="panel wide">
+            <div class="panel-head">
+              <div>
+                <h2>Hook 上报配置</h2>
+                <p>把下面地址配置到 Codex / Claude Code hooks 中，使用你的 API Key 作为 Bearer Token。</p>
+              </div>
+            </div>
+            <pre><code>curl -X POST https://example.com/portal/api/agent/events \
+  -H "Authorization: Bearer $AI_PROXY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "client": "codex",
+    "session_id": "project-20260614-001",
+    "event_type": "UserPromptSubmit",
+    "prompt": "用户的第一个问题",
+    "model": "gpt-5.5",
+    "context_window": 1050000,
+    "used_tokens": 12000,
+    "cwd": "/path/to/project"
+  }'</code></pre>
+          </section>
+        </section>
+
+        <section class="page-view hidden" id="billingPage" data-title="套餐与订单">
+          <section class="panel wide resource-overview" id="resourceOverview">
+            <div class="panel-head">
+              <div>
+                <h2>当前资源概览</h2>
+                <p>按 Claude 和 Codex 资源池展示 5h / 7d 合计余量和预计恢复时间。<span id="resourceUpdatedAt">-</span></p>
+              </div>
+              <span class="live-pill loading" id="resourceLiveStatus">同步中</span>
+            </div>
+            <div class="resource-grid" id="resourceCards">
+              <div class="empty">正在同步资源池状态</div>
+            </div>
+          </section>
+
+          <section class="panel" id="plans">
+            <div class="panel-head">
+              <div>
+                <h2>套餐支付</h2>
+                <p>支付完成后自动更新当前 Key 的模型、预算、team 和限速。</p>
+              </div>
+              <select id="payType"></select>
+            </div>
+            <article class="custom-builder" id="customBuilder">
+              <div class="panel-head">
+                <div>
+                  <h3>自定义组合</h3>
+                  <p id="customDescription">自由选择模型组合和预算额度。</p>
+                </div>
+                <div class="custom-price">
+                  <span>预计应付</span>
+                  <strong id="customPrice">￥0.00</strong>
+                </div>
+              </div>
+              <div class="model-picker" id="customModels"></div>
+              <p class="capacity-note" id="capacityNote">预算按 1 USD = 7.2 CNY 换算，请求数和限速按所选档位计费。</p>
+              <div class="custom-controls">
+                <label>
+                  预算额度 USD
+                  <input id="customBudget" type="number" min="0.05" step="0.05" value="1" />
+                </label>
+                <label>
+                  有效期
+                  <select id="customDuration"></select>
+                </label>
+                <label>
+                  请求数
+                  <select id="customRequestOption"></select>
+                </label>
+                <label>
+                  RPM 限速
+                  <select id="customRpmOption"></select>
+                </label>
+                <label>
+                  TPM 限速
+                  <select id="customTpmOption"></select>
+                </label>
+                <button type="button" id="createCustomOrder">购买自定义组合</button>
+              </div>
+            </article>
+            <div class="plans" id="plansGrid"></div>
+          </section>
+
+          <section class="panel wide" id="orders">
+            <div class="panel-head">
+              <div>
+                <h2>订单与退款</h2>
+                <p>已支付订单可做退款测算；退款会扣除通道手续费和 Token 消耗费用。</p>
+              </div>
+            </div>
+            <div class="order-list" id="orderList"></div>
+          </section>
+        </section>
+
+        <section class="page-view hidden" id="docsPage" data-title="调用文档">
+          <section class="panel">
+            <div class="panel-head">
+              <div>
+                <h2>快速调用案例</h2>
+                <p>支付激活后，把 API Key 放到 Authorization 头即可调用 OpenAI 兼容接口。</p>
+              </div>
+            </div>
+            <pre><code>curl https://llm.example.com/v1/chat/completions \
+  -H "Authorization: Bearer YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3-32b",
+    "messages": [
+      {"role": "system", "content": "你是一个简洁可靠的助手。"},
+      {"role": "user", "content": "用三句话介绍AI Proxy。"}
+    ]
+  }'</code></pre>
+          </section>
+
+          <section class="doc-grid">
+            <article class="panel">
+              <h2>Python 示例</h2>
+              <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_KEY",
+    base_url="https://llm.example.com"
+)
+
+resp = client.chat.completions.create(
+    model="qwen3-32b",
+    messages=[{"role": "user", "content": "你好"}],
+)
+print(resp.choices[0].message.content)</code></pre>
+            </article>
+            <article class="panel">
+              <h2>JavaScript 示例</h2>
+              <pre><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.AI_PROXY_API_KEY,
+  baseURL: "https://llm.example.com",
+});
+
+const resp = await client.chat.completions.create({
+  model: "qwen3-32b",
+  messages: [{ role: "user", content: "你好" }],
+});
+console.log(resp.choices[0].message.content);</code></pre>
+            </article>
+          </section>
+
+          <section class="client-config-grid">
+            <article class="panel client-module">
+              <div class="panel-head">
+                <div>
+                  <h2>Codex 配置</h2>
+                  <p>配置文件：macOS / Linux 为 ~/.codex/config.toml，Windows 为 %USERPROFILE%\.codex\config.toml。</p>
+                </div>
+                <div class="panel-actions">
+                  <a class="mini-button" href="docs/codex" target="_blank">安装说明</a>
+                  <span class="doc-view-count" data-doc-view="docs:codex"></span>
+                </div>
+              </div>
+              <h3>环境变量</h3>
+              <pre><code># macOS / Linux / WSL
+export AI_PROXY_API_KEY="YOUR_KEY"
+
+# Windows PowerShell，设置后重新打开终端
+[Environment]::SetEnvironmentVariable("AI_PROXY_API_KEY", "YOUR_KEY", "User")</code></pre>
+              <h3>config.toml</h3>
+              <pre><code>model_provider = "ai-proxy"
+model = "gpt-5.5"
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "xhigh"
+model_reasoning_summary = "none"
+model_context_window = 1050000
+model_auto_compact_token_limit = 945000
+tool_output_token_limit = 6000
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+suppress_unstable_features_warning = true
+cache_ttl = "30m"
+
+[model_providers.ai-proxy]
+name = "OpenAI"
+base_url = "https://llm.example.com"
+wire_api = "responses"
+requires_openai_auth = false
+env_key = "AI_PROXY_API_KEY"
+supports_websockets = false
+
+[features]
+responses_websockets_v2 = false
+multi_agent = true
+remote_connections = true
+
+[agents]
+max_threads = 4
+max_depth = 1
+job_max_runtime_seconds = 1800
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 4</code></pre>
+            </article>
+
+            <article class="panel client-module">
+              <div class="panel-head">
+                <div>
+                  <h2>Claude Code 配置</h2>
+                  <p>配置文件：macOS / Linux 为 ~/.claude/settings.json，Windows 为 %USERPROFILE%\.claude\settings.json。</p>
+                </div>
+                <div class="panel-actions">
+                  <a class="mini-button" href="docs/claude-code" target="_blank">安装说明</a>
+                  <span class="doc-view-count" data-doc-view="docs:claude-code"></span>
+                </div>
+              </div>
+              <h3>环境变量</h3>
+              <pre><code># macOS / Linux / WSL
+export AI_PROXY_API_KEY="YOUR_KEY"
+export ANTHROPIC_BASE_URL="https://example.com/portal/anthropic"
+export ANTHROPIC_AUTH_TOKEN="$AI_PROXY_API_KEY"
+
+# Windows PowerShell，设置后重新打开终端
+[Environment]::SetEnvironmentVariable("AI_PROXY_API_KEY", "YOUR_KEY", "User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://example.com/portal/anthropic", "User")
+[Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", "YOUR_KEY", "User")</code></pre>
+              <h3>settings.json</h3>
+              <pre><code>{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://example.com/portal/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_KEY",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "ANTHROPIC_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-opus-4-8",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000"
+  },
+  "skipWebFetchPreflight": true,
+  "skipDangerousModePermissionPrompt": true
+}</code></pre>
+            </article>
+          </section>
+
+          <section class="panel wide">
+            <div class="panel-head">
+              <div>
+                <h2>最佳实践</h2>
+                <p>这些做法能减少泄露、超支和线上超时问题。</p>
+              </div>
+              <div class="panel-actions">
+                <a class="mini-button" href="docs" target="_blank">更多调用文档举例</a>
+                <span class="doc-view-count" data-doc-view="docs:api"></span>
+              </div>
+            </div>
+            <div class="practice-grid">
+              <div><strong>服务端保存 Key</strong><span>不要把 Key 写进前端代码或移动端包，统一由服务端转发调用。</span></div>
+              <div><strong>设置超时和重试</strong><span>网络调用建议 30-60 秒超时，只对 429/5xx 做有限重试。</span></div>
+              <div><strong>控制上下文</strong><span>长对话要摘要历史消息，避免无意义 token 消耗。</span></div>
+              <div><strong>按模型分层</strong><span>轻量任务使用低成本模型，复杂推理再切换高阶模型。</span></div>
+              <div><strong>记录 request_id</strong><span>线上排障时保留请求时间、模型名和 request_id。</span></div>
+              <div><strong>监控余额</strong><span>接近预算上限时及时续费，避免业务调用突然被阻断。</span></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="page-view hidden" id="newsPage" data-title="新闻更新">
+          <section class="panel wide">
+            <div class="panel-head">
+              <div>
+                <h2>新闻更新</h2>
+                <p>模型上下线、套餐调整和调用文档更新会在这里发布。</p>
+              </div>
+            </div>
+            <div class="news-list" id="appNewsList"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal hidden" id="refundModal">
+      <section class="modal-card">
+        <div class="panel-head">
+          <div>
+            <h2>人工退款申请</h2>
+            <p id="refundOrderNo">-</p>
+          </div>
+          <button class="secondary" type="button" id="closeRefund">关闭</button>
+        </div>
+        <dl class="summary refund-summary">
+          <div><dt>订单金额</dt><dd id="refundOrderAmount">-</dd></div>
+          <div><dt>通道手续费</dt><dd id="refundChannelFee">-</dd></div>
+          <div><dt>Token 消耗</dt><dd id="refundTokenCost">-</dd></div>
+          <div><dt>调用次数</dt><dd id="refundRequests">-</dd></div>
+          <div><dt>已扣额度</dt><dd id="refundBudgetDeduction">-</dd></div>
+          <div><dt>预计可退</dt><dd id="refundAmount">-</dd></div>
+        </dl>
+        <p class="refund-note" id="refundNote">-</p>
+        <div class="refund-contact">
+          <div class="refund-qr-card">
+            <strong>联系管理员</strong>
+            <img id="refundContactQr" src="assets/contact-qr.png" alt="管理员联系二维码" />
+          </div>
+          <div class="refund-qr-card">
+            <strong>退款收据截图样例</strong>
+            <img id="refundSample" src="assets/refund-sample.png" alt="退款收据截图样例" />
+          </div>
+        </div>
+        <div class="refund-checklist">
+          <strong>联系管理员时请提供</strong>
+          <span>订单号：<code id="refundCopyOrder">-</code></span>
+          <span>API Key：<code id="refundApiKeyMasked">-</code></span>
+          <span>后台退款收据截图：参考右侧样例</span>
+        </div>
+        <div class="modal-actions">
+          <button class="danger" type="button" id="confirmRefund">提交人工退款申请</button>
+          <button class="secondary" type="button" id="cancelRefundRequest">取消退款申请</button>
+          <button class="secondary" type="button" id="copyRefundKey">复制完整 API Key</button>
+          <button class="secondary" type="button" id="cancelRefund">取消</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="static/code-highlight.js?v=20260617-portal-38"></script>
+    <script src="static/app.js?v=20260621-login-usage-cache"></script>
+  </body>
+</html>
